@@ -1,44 +1,37 @@
 const jwt = require("jsonwebtoken");
-
-const users = [
-  {
-    id: 123,
-    role: "basic",
-    name: "Basic Thomas",
-    username: "basic-thomas",
-    password: "sR-_pcoow-27-6PAwCD8",
-  },
-  {
-    id: 434,
-    role: "premium",
-    name: "Premium Jim",
-    username: "premium-jim",
-    password: "GBLtTyq3E_UNjFnpo9m6",
-  },
-];
+const Model = require("./server");
+const bcrypt = require("bcrypt");
 
 class AuthError extends Error {}
 
-const authFactory = (secret) => (username, password) => {
-  const user = users.find((u) => u.username === username);
+const authFactory = async (secret) => (username, password) => {
 
-  if (!user || user.password !== password) {
+  let [rows, ] = await Model.promise.query(`SELECT * FROM ${Model.DB_NAME}.users WHERE username = ?`, [username])
+    .catch(error => {console.error(error); throw new AuthError("Error occured during authorisation. Try again later.");});
+  
+  const user = JSON.parse(JSON.stringify(rows)); //Content coming from database isn't a valid JSON. This line removes the artefacts.
+
+  let isPasswordValid;
+  await bcrypt.compare(password, user[0].password).then(result => {isPasswordValid = result}).catch(error => {isPasswordValid = false});
+
+  if(user.length !== 1 || !isPasswordValid) {
     throw new AuthError("invalid username or password");
   }
-
-  return jwt.sign(
-    {
-      userId: user.id,
-      name: user.name,
-      role: user.role,
-    },
-    secret,
-    {
-      issuer: "https://www.netguru.com/",
-      subject: `${user.id}`,
-      expiresIn: 30 * 60,
-    }
-  );
+  else {
+    return jwt.sign(
+      {
+        userId: user[0].id,
+        name: user[0].name,
+        role: user[0].role,
+      },
+      secret,
+      {
+        issuer: "https://www.netguru.com/",
+        subject: `${user[0].id}`,
+        expiresIn: 30 * 60,
+      }
+    );
+  }
 };
 
 module.exports = {
