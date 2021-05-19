@@ -1,19 +1,27 @@
 version: "3.2"
-services:
-  app:
-    command: node src/server.js
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - published: ${APP_PORT:-3000}
-        target: 3000
-    volumes:
-      - .:/app/
-    environment:
-      JWT_SECRET: ${JWT_SECRET}
-      DB_NAME: ${DB_NAME}
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
-      DB_USER: ${DB_USER}
-      DB_PASS: ${DB_PASS}
+services: 
+  db:
+    build: ./db
+    environment: 
+      MYSQL_DATABASE: "${MYSQL_DATABASE:-node_recruitment_task}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-root}"
+      MYSQL_USER: "${MYSQL_USER:-mysql}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD:-secret}"
+      DATABASE_HOST: "${DATABASE_HOST:-db}"
+  web:
+    build: ./web
+    environment: 
+      JWT_SECRET: "${JWT_SECRET:-SeCr3t_CaTfIsH123#@!}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE:-node_recruitment_task}"
+      MYSQL_USER: "${MYSQL_USER:-mysql}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD:-secret}"
+      DATABASE_HOST: "${DATABASE_HOST:-db}"
+      DATABASE_PORT: "${DATABASE_PORT:-3306}"
+      NODE_ENV: ${NODE_ENV:-production}
+      APP_PORT: ${APP_PORT:-3000}
+    ports: 
+      - "${APP_PORT:-3000}:${APP_PORT:-3000}"
+    depends_on: 
+      - db
+    restart: on-failure
+      
