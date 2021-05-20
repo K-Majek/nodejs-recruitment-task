@@ -16,7 +16,7 @@ test("Should have 8-digit date format for parsing to MySQL datetime", () => {
     
 });
 
-//this test actually found that there is possibility for unexpected 9 digits instead of 8 for the first time.
+//this test actually found out there is possibility for unexpected 9 digits instead of 8 for the first time.
 test("Should have 8-digit date format for parsing to MySQL datetime", () => {
     const body = {
         Title: "Title",
