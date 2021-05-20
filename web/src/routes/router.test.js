@@ -3,7 +3,7 @@ const utils = require("../../utils");
 //units
 
 //This one looked unsafe, so I decided to test two variants.
-//First test was q false positive, second one showed where is the problem
+//First test was a false positive, second one showed where is the problem
 test("Should have 8-digit date format for parsing to MySQL datetime", () => {
     const body = {
         Title: "Title",
