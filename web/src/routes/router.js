@@ -52,16 +52,14 @@ router.post(/\/movies/, parse_token, async (req, res, next) => {
             const {Title, Genre, Director} = body;
             const parsed_date = Date.parse(body.Released);
             const date = new Date(parsed_date);
-            const Released = `${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`;
+            const Released = `${date.getFullYear()}${date.getMonth() < 10 ? "0" + (date.getMonth() + 1).toString() : date.getMonth() + 1}${date.getDate() < 10 ? "0" + date.getDate().toString() : date.getDate() }`;
             
             const [rows, ] = await model.promise.query(`SELECT Title, Released FROM ${model.ENV_VARS.MYSQL_DATABASE}.movies WHERE id = ? AND title = ? AND released = ?`, [req.user.userId, Title, Released]);
             if(rows.length === 1) return res.status(412).json({ error: "movie already exists on your account" });
 
-
-            //checked released date, changed into datetime parseable format
             model.promise.query(`INSERT INTO ${model.ENV_VARS.MYSQL_DATABASE}.movies VALUES (?, ?, ?, ?, ?, NOW())`, [req.user.userId, Title, Released, Genre, Director])
             .then(result => { 
-                res.status(201).json({ data: `movie ${req.body.title} stored successfully into database` })
+                res.status(201).json({ data: `movie "${req.body.title}" stored successfully into database` });
             })
             .catch(error => { 
                 console.log(error);
