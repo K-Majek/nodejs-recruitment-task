@@ -52,7 +52,17 @@ router.post(/\/movies/, parse_token, async (req, res, next) => {
             const {Title, Genre, Director} = body;
             const parsed_date = Date.parse(body.Released);
             const date = new Date(parsed_date);
-            const Released = `${date.getFullYear()}${date.getMonth() < 10 ? "0" + (date.getMonth() + 1).toString() : date.getMonth() + 1}${date.getDate() < 10 ? "0" + date.getDate().toString() : date.getDate() }`;
+            const month = date.getMonth() + 1;
+            let Released = date.getFullYear().toString();
+            
+            if(month < 10) {
+                Released += `0${month}`;
+            }
+            else Released += month;
+            if(date.getDate() < 10){
+                Released += `0${date.getDate()}`;
+            }
+            else Released += date.getDate().toString();
             
             const [rows, ] = await model.promise.query(`SELECT Title, Released FROM ${model.ENV_VARS.MYSQL_DATABASE}.movies WHERE id = ? AND title = ? AND released = ?`, [req.user.userId, Title, Released]);
             if(rows.length === 1) return res.status(412).json({ error: "movie already exists on your account" });
