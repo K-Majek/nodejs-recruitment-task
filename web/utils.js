@@ -26,3 +26,19 @@ exports.tokenCheck = (body) => {
     if(!token) return false;
     else return true;
 }
+
+exports.auth = (rows, request) => {
+  if(rows.length === 0) throw new Error ("invalid username or password");
+
+  const user = JSON.parse(JSON.stringify(rows));
+  
+
+  let isPasswordValid = request.password === rows[0].password;
+
+  if(!isPasswordValid) {
+    throw new Error("invalid username or password");
+  }
+  else {
+    return "top34ntpoinpvj23,-c4,13i04c,234/v324v/5v345.v..543v.53v4.52v341v.432v.v.534";
+  }
+}

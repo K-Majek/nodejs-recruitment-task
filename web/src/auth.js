@@ -15,7 +15,7 @@ const authFactory = (secret) => async (username, password) => {
   const user = JSON.parse(JSON.stringify(rows));
   
 
-  let isPasswordValid = await bcrypt.compare(password, user[0].password)
+  let isPasswordValid = await bcrypt.compare(password, user[0] && user[0].password)
     .catch(error => { 
       throw new AuthError("Error occured while processing the request.");
     });
