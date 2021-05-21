@@ -25,7 +25,7 @@ test("Should throw an exception on invalid password", () => {
     expect(() => {utils.auth(body, request)}).toThrow("invalid username or password");
 })
 //should return a string on valid password
-test("Should throw an exception on invalid password", () => {
+test("Should return a string on valid password and username", () => {
     const body = [{
         username: "billy",
         password: "the_hamster"
