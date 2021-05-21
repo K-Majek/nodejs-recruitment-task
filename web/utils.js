@@ -1,7 +1,7 @@
 
 exports.fetch = body => {
     if(body.Error) {
-        return res.status(404).json({ error: body.Error });
+        throw new Error(body.Error);
     }
     const {Title, Genre, Director} = body;
     const parsed_date = Date.parse(body.Released);
