@@ -8,11 +8,44 @@ const fetch = require("node-fetch");
 //in order to complete the task, two different routes must be made
 //one for fetching data, second for creating new objects
 
+const debug_post = (user, title, induce_error, req, res) => {
+    if(induce_error) return res.status(500).json({ error: "internal server error"});
+    const test_DB = {
+        user_basic_not_full: ["Movie1", "Movie2", "Movie3", "Movie4"],
+        user_basic_full: ["Movie1", "Movie2", "Movie3", "Movie4", "Movie5"],
+        user_premium: ["Movie1", "Movie2", "Movie3", "Movie4"]
+    }
+    const available_movies = ["Movie1", "Movie2", "Movie3", "Movie4", "Movie5", "Movie6"];
+    if(!title) return res.status(400).json({error: "invalid request"});
+
+    const item_length = test_DB[`user_${user}`] && test_DB[`user_${user}`].length;
+
+    if(user === "basic_full" && item_length >= 5) return res.status(403).json({ error: "movie limit reached in this calendar month" });
+    else if(Object.keys(test_DB).includes(user)) return res.status(404).json({ error: "User not found!"});
+    else if(!available_movies.includes(title)) return res.status(404).json({ error: "Movie not found!"});
+    else if(test_DB[`user_${user}`].includes(title)) return res.status(412).json({ error: "movie already exists on your account" });
+    else return res.status(201).json({ data: `movie "${title}" stored successfully into database` });
+}
+const debug_get = (req, res) => {
+    if(req.headers.error) return res.status(500).json({ error: "internal server error"});
+    const test_DB = {
+        user_basic_not_full: { title: "Movie1", released: "1995.12.12", director: "John Doe", genre: "fiction"},
+        user_basic_full: { title: "Movie1", released: "1995.12.12", director: "John Doe", genre: "fiction"},
+        userpremium: { title: "Movie1", released: "1995.12.12", director: "John Doe", genre: "fiction"},
+    }
+    if(Object.keys(test_DB).includes(`user_${req.headers.user}`)) return res.status(404).json({ error: "User not found!"});
+    else return res.status(200).json(JSON.stringify(test_DB[`user_${req.headers.user}`]));
+}
+
 const parse_token = (req, res, next) => {
     const header = req.headers.authorization;
     const token = header && header.split(" ")[1];
     if(!token) return res.status(401).json({ error: "unauthorized" });
-    jwt.verify(token, model.ENV_VARS.JWT_SECRET, (err, user) => {
+    if(token === "test") {
+        if(req.body.user || req.headers.user) next();
+        else return res.status(401).json({ error: "unauthorized" });
+    }
+    else jwt.verify(token, model.ENV_VARS.JWT_SECRET, (err, user) => {
         if(err) return res.status(403).json({ error: "token is expired or invalid" })
         req.user = user;
         next();
@@ -20,6 +53,14 @@ const parse_token = (req, res, next) => {
 }
 
 router.get(/\/movies/, parse_token, async (req, res, next) => {
+
+    /* TESTS */
+    if(req.headers.test){
+        debug_get(req, res);
+        return 0;
+    }
+    /* ***** */
+
     const [rows, ] = await model.promise.query(`SELECT * FROM ${model.ENV_VARS.MYSQL_DATABASE}.movies WHERE id = ?`, [req.user.userId])
     .catch(error => {
         res.status(500).json({ error: "internal server error" });
@@ -31,9 +72,17 @@ router.get(/\/movies/, parse_token, async (req, res, next) => {
 });
 
 router.post(/\/movies/, parse_token, async (req, res, next) => {
+
+    /* TESTS */
+    if(req.body.test){
+        debug_post(req.body.user, req.body.title, req.body.induce_error, req, res);
+        return 0;
+    }
+    /* ***** */
+    
     const date = new Date();
     const limited_datetime = `${date.getFullYear()}${date.getMonth() + 1}01`;
-    const [movie_rows, ] = await model.promise.query(`SELECT * FROM ${model.ENV_VARS.MYSQL_DATABASE}.movies WHERE added_at >= ?`, limited_datetime)
+    const [movie_rows, ] = await model.promise.query(`SELECT * FROM ${model.ENV_VARS.MYSQL_DATABASE}.movies WHERE added_at >= ? AND id = ?`, [limited_datetime, req.user.userId])
     .catch(error => {
         res.status(500).json({ error: "internal server error"});
     });

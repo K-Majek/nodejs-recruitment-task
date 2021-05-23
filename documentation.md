@@ -17,14 +17,14 @@ Here are the environment variables, which can be changed at will. It's possible 
 
 There are several environment variables, which can be changed:
 
-`JWT_SECRET`            - the token password needed to sign the JSON Web Tokens
-`MYSQL_DATABASE`        - name for MySQL database schema
-`MYSQL_ROOT_PASSWORD`   - root user password, default is `root`
-`MYSQL_USER`            - regular MySQL user, default is `mysql`
-`MYSQL_PASSWORD`        - MySQL user password, default is `secret`
-`DATABASE_HOST`         - name of the host which will be recognised by other containers within the network
-`APP_PORT`              - port on which node application will run. default is `3000`
-`OMDB_API_KEY`          - key consisting of http://www.omdbapi.com/?i=<OMDB_ID>&apikey=<API_KEY>
+- `JWT_SECRET`            - the token password needed to sign the JSON Web Tokens
+- `MYSQL_DATABASE`        - name for MySQL database schema
+- `MYSQL_ROOT_PASSWORD`   - root user password, default is `root`
+- `MYSQL_USER`            - regular MySQL user, default is `mysql`
+- `MYSQL_PASSWORD`        - MySQL user password, default is `secret`
+- `DATABASE_HOST`         - name of the host which will be recognised by other containers within the network
+- `APP_PORT`              - port on which node application will run. default is `3000`
+- `OMDB_API_KEY`          - key consisting of http://www.omdbapi.com/?i=<OMDB_ID>&apikey=<API_KEY>
 
 # Routes
 
@@ -45,13 +45,14 @@ There are several environment variables, which can be changed:
 - Expected headers: `Authorization`
 - Expected data: `title` field
 - Expected response: 
-a) `201` status and message, when request is successfully processed and the item is added to the database;
-b) `400` status and error message, when no `title` is sent in the payload.
-c) `401` status and error message, when user has sent no `Authorization` header
-d) `403` status and error message, when user send expired or invalid `JWT token`, or has met his monthly limit
-e) `404` status and error message, when there is no item matching the `title` field
-f) `412` status and error message, when there is already a duplicate item
-g) `500` status and error message, when the database is down
+
+- `201` status and message, when request is successfully processed and the item is added to the database;
+- `400` status and error message, when no `title` is sent in the payload.
+- `401` status and error message, when user has sent no `Authorization` header
+- `403` status and error message, when user send expired or invalid `JWT token`, or has met his monthly limit
+- `404` status and error message, when there is no item matching the `title` field
+- `412` status and error message, when there is already a duplicate item
+- `500` status and error message, when the database is down
 
 
 `GET /movies`
@@ -60,7 +61,8 @@ g) `500` status and error message, when the database is down
 - Expected headers: `Authorization`
 - Expected data: none
 - Expected response:
-a) `200` status and json consisting out of `title`, `released`, `genre`, `director`, when request is processed
-b) `401` status and error message, when user has sent no `Authorization` header.
-c) `403` status and error message, when user has expired or invalid `JWT token`
-d) `500` status and error message, when the database is down
+
+- `200` status and json consisting out of `title`, `released`, `genre`, `director`, when request is processed
+- `401` status and error message, when user has sent no `Authorization` header.
+- `403` status and error message, when user has expired or invalid `JWT token`
+- `500` status and error message, when the database is down
