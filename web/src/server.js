@@ -17,10 +17,12 @@ const { APP_PORT, JWT_SECRET, DATABASE_HOST, DATABASE_PORT, MYSQL_USER, MYSQL_PA
 const ENV_VARS = { APP_PORT, JWT_SECRET, DATABASE_HOST, DATABASE_PORT, MYSQL_PASSWORD, MYSQL_DATABASE, OMDB_API_KEY};
 Object.seal(ENV_VARS);
 
-for(const i in ENV_VARS) if(typeof ENV_VARS[i] !== "string") {
-  console.error(`Invalid "${i}" env var. Expected "string", got "${typeof ENV_VARS[i]}" instead.`);
-  process.exit(9);
-};
+if(process.env.NODE_ENV !== "test"){
+  for(const i in ENV_VARS) if(typeof ENV_VARS[i] !== "string") {
+    console.error(`Invalid "${i}" env var. Expected "string", got "${typeof ENV_VARS[i]}" instead.`);
+    process.exit(9);
+  };
+}
 
 const db_config = {
   host: DATABASE_HOST,
