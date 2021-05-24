@@ -6,7 +6,7 @@
     "start": "node ./src/server",
     "test": "jest",
     "test-handle": "jest --detectOpenHandles",
-    "pipeline": "NODE_ENV=test APP_PORT=3000 node ./src/server"
+    "pipeline": "NODE_ENV=test APP_PORT=3000 node ./src/server && jest"
   },
   "keywords": [],
   "author": "",
