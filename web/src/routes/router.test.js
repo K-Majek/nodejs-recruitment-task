@@ -1,5 +1,8 @@
 const utils = require("../../utils");
 const puppeteer = require("puppeteer");
+
+const host = "http://localhost";
+const port = "3000";
 //units
 
 //This one looked unsafe, so I decided to test two variants.
@@ -49,7 +52,7 @@ test("Check if token is existing, test 5", () => {
     const body = "Bearer";
     expect(utils.tokenCheck(body)).toBe(false);
 });
-
+/* End-to-End tests. Uncomment, save and run "npm test" to run those.
 //POST /movies
 //posting movie from premium user, server should respond with a 201 status
 test("Posting movie from premium user, server should respond with a 201 status.", async () => {
@@ -69,7 +72,7 @@ test("Posting movie from premium user, server should respond with a 201 status."
         }
         request.continue(payload);
     });
-    const response = await page.goto("http://localhost:3000/movies");
+    const response = await page.goto(`${host}:${port}/movies`);
     const responseBody = await response.text();
     await browser.close();
     expect(response._status).toBe(201);
@@ -93,7 +96,7 @@ test("Posting movie from basic user that hasn't met his limit, server should res
         }
         request.continue(payload);
     });
-    const response = await page.goto("http://localhost:3000/movies");
+    const response = await page.goto(`${host}:${port}/movies`);
     await browser.close();
     expect(response._status).toBe(201);
 });
@@ -116,7 +119,7 @@ test("Posting movie from basic user that has met his limit, server should respon
         }
         request.continue(payload);
     });
-    const response = await page.goto("http://localhost:3000/movies");
+    const response = await page.goto(`${host}:${port}/movies`);
     await browser.close();
     expect(response._status).toBe(403);
 });
@@ -138,7 +141,7 @@ test("User has sent invalid authentication token, should receive 403 status.", a
         }
         request.continue(payload);
     });
-    const response = await page.goto("http://localhost:3000/movies");
+    const response = await page.goto(`${host}:${port}/movies`);
     await browser.close();
     expect(response._status).toBe(403);
 });
@@ -160,7 +163,7 @@ test("User has sent no authentication token, should receive a 401 status.", asyn
         }
         request.continue(payload);
     });
-    const response = await page.goto("http://localhost:3000/movies");
+    const response = await page.goto(`${host}:${port}/movies`);
     await browser.close();
     expect(response._status).toBe(401);
 });
@@ -183,7 +186,7 @@ test("User has sent no title in the payload, should receive a 400 status.", asyn
         }
         request.continue(payload);
     });
-    const response = await page.goto("http://localhost:3000/movies");
+    const response = await page.goto(`${host}:${port}/movies`);
     await browser.close();
     expect(response._status).toBe(400);
 });
@@ -206,7 +209,7 @@ test("User typed everything properly, but server couldn't find an item, respondi
         }
         request.continue(payload);
     });
-    const response = await page.goto("http://localhost:3000/movies");
+    const response = await page.goto(`${host}:${port}/movies`);
     await browser.close();
     expect(response._status).toBe(404);
 });
@@ -229,7 +232,7 @@ test("User typed everything properly, but server couldn't find an item, respondi
         }
         request.continue(payload);
     });
-    const response = await page.goto("http://localhost:3000/movies");
+    const response = await page.goto(`${host}:${port}/movies`);
     await browser.close();
     expect(response._status).toBe(404);
 });
@@ -252,7 +255,7 @@ test("User wanted to add a duplicate. Server should respond with 412 status.", a
         }
         request.continue(payload);
     });
-    const response = await page.goto("http://localhost:3000/movies");
+    const response = await page.goto(`${host}:${port}/movies`);
     await browser.close();
     expect(response._status).toBe(412);
 });
@@ -276,7 +279,7 @@ test("Forcing server to respond with an 500 error.", async () => {
         }
         request.continue(payload);
     });
-    const response = await page.goto("http://localhost:3000/movies");
+    const response = await page.goto(`${host}:${port}/movies`);
     await browser.close();
     expect(response._status).toBe(500);
 });
@@ -300,7 +303,7 @@ test("Requesting rubbish  test 01", async () => {
         }
         request.continue(payload);
     });
-    const response = await page.goto("http://localhost:3000/movies");
+    const response = await page.goto(`${host}:${port}/movies`);
     await browser.close();
     expect(response._status).toBe(403);
 });
@@ -323,7 +326,7 @@ test("Requesting rubbish", async () => {
         }
         request.continue(payload);
     });
-    const response = await page.goto("http://localhost:3000/movies");
+    const response = await page.goto(`${host}:${port}/movies`);
     await browser.close();
     expect(response._status).toBe(404);
 });
@@ -342,7 +345,7 @@ test("Authenticated, expecting a 200 status.", async () => {
         }
         request.continue(payload);
     });
-    const response = await page.goto("http://localhost:3000/movies");
+    const response = await page.goto(`${host}:${port}/movies`);
     await browser.close();
     expect(response._status).toBe(200);
 });
@@ -363,7 +366,7 @@ test("Invalid token, expecting 403 status.", async () => {
         }
         request.continue(payload);
     });
-    const response = await page.goto("http://localhost:3000/movies");
+    const response = await page.goto(`${host}:${port}/movies`);
     await browser.close();
     expect(response._status).toBe(403);
 });
@@ -384,7 +387,7 @@ test("No token, expecting 401 status.", async () => {
         }
         request.continue(payload);
     });
-    const response = await page.goto("http://localhost:3000/movies");
+    const response = await page.goto(`${host}:${port}/movies`);
     await browser.close();
     expect(response._status).toBe(401);
 });
@@ -407,7 +410,8 @@ test("Forcing server to respond with an 500 error.", async () => {
         }
         request.continue(payload);
     });
-    const response = await page.goto("http://localhost:3000/movies");
+    const response = await page.goto(`${host}:${port}/movies`);
     await browser.close();
     expect(response._status).toBe(500);
 });
+*/

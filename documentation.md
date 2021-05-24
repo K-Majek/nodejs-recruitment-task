@@ -10,6 +10,8 @@ Installed `docker` and `docker-compose`
 
 In order to run the application, cloning the repository and use of `docker-compose up -d` and waiting is enough to run.
 
+To stop the application, run `docker-compose down -d`
+
 
 # Customisation
 
@@ -66,3 +68,9 @@ There are several environment variables, which can be changed:
 - `401` status and error message, when user has sent no `Authorization` header.
 - `403` status and error message, when user has expired or invalid `JWT token`
 - `500` status and error message, when the database is down
+
+# Testing
+
+
+- project contains e2e tests in route `~/web/src/router.test.js`. Uncomment them and type `npm test` in the `web` folder in order to run them.
+- you can change the host and the port if you like in `host` and `port` constant variables
