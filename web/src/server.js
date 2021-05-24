@@ -80,7 +80,7 @@ const estabilish_connection = () => {
       });
   }
 }
-estabilish_connection();
+if(process.env.NODE_ENV !== "test") estabilish_connection();
 
 const auth = authFactory(JWT_SECRET);
 
