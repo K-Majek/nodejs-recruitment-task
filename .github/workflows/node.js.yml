@@ -29,5 +29,3 @@ jobs:
       working-directory: ./web
     - run: npm run pipeline --if-present
       working-directory: ./web
-    - run: npm test
-      working-directory: ./web
