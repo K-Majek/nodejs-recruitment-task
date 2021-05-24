@@ -135,7 +135,7 @@ app.use("/", require("./routes/router")); //added middleware to handle all the r
 app.get("/", (req, res, next) => {
   res.send("working");
 })
-if(process.env.NODE_ENV === "test") setTimeout(() => { process.exit(0); }, 30000);
+if(process.env.NODE_ENV === "test") setTimeout(() => { process.exit(0); }, 60000);
 app.listen(APP_PORT, () => {
   console.log(`Initializing express server... Service will be running soon on port ${APP_PORT}.`);
 });
